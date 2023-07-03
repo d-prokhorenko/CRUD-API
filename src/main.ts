@@ -1,6 +1,6 @@
 import { createServer, IncomingMessage, ServerResponse } from 'http';
 import 'dotenv/config';
-import { GET, POST } from './routes/users.routes.js';
+import { GET, POST, PUT } from './routes/users.routes.js';
 
 const PORT = process.env.PORT || 3000;
 
@@ -15,7 +15,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
         POST(req, res);
         break;
       case 'PUT':
-        console.log('PUT');
+        PUT(req, res);
         break;
       case 'DELETE':
         console.log('DELETE');

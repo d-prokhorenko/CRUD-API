@@ -26,3 +26,16 @@ export async function createUser(user: User): Promise<User> {
     res(newUser);
   });
 }
+
+export async function updateUser(user: User): Promise<User> {
+  return new Promise((res, rej) => {
+    const currentUserIndex = USERS.findIndex(({ id }) => id === user.id);
+    if (currentUserIndex) {
+      const updatedUser = { ...USERS[currentUserIndex], ...user };
+      USERS.splice(currentUserIndex, 1, { ...updatedUser });
+      res(updatedUser);
+    } else {
+      rej('User does not exists');
+    }
+  });
+}
