@@ -39,3 +39,15 @@ export async function updateUser(user: User): Promise<User> {
     }
   });
 }
+
+export async function deleteUser(userId: string): Promise<void> {
+  return new Promise((res, rej) => {
+    const currentUserIndex = USERS.findIndex(({ id }) => id === userId);
+    if (currentUserIndex !== -1) {
+      USERS.splice(currentUserIndex, 1);
+      res();
+    } else {
+      rej('User does not exists');
+    }
+  });
+}

@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { validate as isValidUUID } from 'uuid';
-import { createUser, getUserById, getUsers, updateUser } from '../models/users.model.js';
+import { createUser, deleteUser, getUserById, getUsers, updateUser } from '../models/users.model.js';
 import { User } from '../interfaces/user.interface.js';
 import { isUserValid } from '../helpers/users.functions.js';
 
@@ -87,6 +87,28 @@ export function PUT(req: IncomingMessage, res: ServerResponse) {
           res.end(JSON.stringify({ error }));
         }
       });
+    } else {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Invalid ID' }));
+    }
+  } else {
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'No endpoint found' }));
+  }
+}
+
+export async function DELETE(req: IncomingMessage, res: ServerResponse) {
+  const id = req.url?.split('/')[3];
+  if (req.url?.includes('/api/users/')) {
+    if (id && isValidUUID(id)) {
+      try {
+        const deletedUser = await deleteUser(id);
+        res.writeHead(204, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(deletedUser));
+      } catch (error) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error }));
+      }
     } else {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Invalid ID' }));

@@ -1,6 +1,6 @@
 import { createServer, IncomingMessage, ServerResponse } from 'http';
 import 'dotenv/config';
-import { GET, POST, PUT } from './routes/users.routes.js';
+import { DELETE, GET, POST, PUT } from './routes/users.routes.js';
 
 const PORT = process.env.PORT || 3000;
 
@@ -18,7 +18,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
         PUT(req, res);
         break;
       case 'DELETE':
-        console.log('DELETE');
+        DELETE(req, res);
         break;
       default:
         res.statusCode = 404;
