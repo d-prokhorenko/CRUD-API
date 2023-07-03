@@ -1,5 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { getUserById, getUsers } from '../models/users.model.js';
+import { createUser, getUserById, getUsers } from '../models/users.model.js';
+import { User } from '../interfaces/user.interface.js';
+import { isUserValid } from '../helpers/users.functions.js';
 
 export async function GET(req: IncomingMessage, res: ServerResponse) {
   if (req.url === '/api/users') {
@@ -26,5 +28,33 @@ export async function GET(req: IncomingMessage, res: ServerResponse) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Invalid ID' }));
     }
+  }
+}
+
+export function POST(req: IncomingMessage, res: ServerResponse) {
+  let data = '';
+  if (req.url === '/api/users') {
+    req.on('data', (chunk) => {
+      data += chunk;
+    });
+    req.on('end', async () => {
+      try {
+        const newUser: User = JSON.parse(data);
+        if (isUserValid(newUser)) {
+          const createdUser = await createUser(newUser);
+          res.writeHead(201, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(createdUser));
+        } else {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Invalid user data' }));
+        }
+      } catch (error) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid user data' }));
+      }
+    });
+  } else {
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Internal server error' }));
   }
 }

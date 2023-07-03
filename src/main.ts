@@ -1,6 +1,6 @@
 import { createServer, IncomingMessage, ServerResponse } from 'http';
 import 'dotenv/config';
-import { GET } from './routes/users.routes.js';
+import { GET, POST } from './routes/users.routes.js';
 
 const PORT = process.env.PORT || 3000;
 
@@ -12,7 +12,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
         GET(req, res);
         break;
       case 'POST':
-        console.log('POST');
+        POST(req, res);
         break;
       case 'PUT':
         console.log('PUT');
@@ -30,7 +30,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
     console.error('Internal server error:', error);
     res.statusCode = 500;
     res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ error: 'Internal server error', message: 'Internal server error' }));
+    res.end(JSON.stringify({ error: 'Internal server error' }));
   }
 });
 
